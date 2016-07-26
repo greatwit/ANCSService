@@ -460,6 +460,7 @@ public class DeviceManager
 						needSendAfterConnect = false;
 						shareManager.setMissCall(false);
 					}
+					receivedTelegram();
 				}
 				else 
 				{
@@ -498,6 +499,7 @@ public class DeviceManager
 				RLog.w(TAG, "onServicesDiscovered received: " + status);
 			}
 			RLog.w(TAG, "onServicesDiscovered received======: " + status);
+			receivedTelegram();
 		}
 
 		@Override

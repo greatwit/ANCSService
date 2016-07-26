@@ -18,7 +18,7 @@ import android.widget.TextView;
 import gz.lifesense.ancs.aidl.DeviceInfo;
 import gz.lifesense.ancs.aidl.RemoteBlueTooth;
 
-
+ 
 public class ClientActivity extends Activity implements OnClickListener {
 	private final static String TAG="ClientActivity";
 	TextView textView ;
@@ -65,7 +65,7 @@ public class ClientActivity extends Activity implements OnClickListener {
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			Log.i(TAG, "½¨Á¢Á¬½Ó...");
+			Log.i(TAG, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½...");
 			remoteBeauty = RemoteBlueTooth.Stub.asInterface(service);
 			if(remoteBeauty==null){
 				textView.setText("bind service failed!");	
@@ -73,8 +73,8 @@ public class ClientActivity extends Activity implements OnClickListener {
 			}
 			try {
 				isBinded=true;
-				btn_bind.setText("¶Ï¿ª");
-				textView.setText("ÒÑÁ¬½Ó!");
+				btn_bind.setText("ï¿½Ï¿ï¿½");
+				textView.setText("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!");
 				beauty 	= remoteBeauty.getDeviceInfo();
 				allInfo = remoteBeauty.getAllInfo();
 				btn_getName.setEnabled(true);
@@ -100,19 +100,19 @@ public class ClientActivity extends Activity implements OnClickListener {
 				Intent intent  = new Intent(actionName);
 				bindService(intent, connection, Context.BIND_AUTO_CREATE);				
 			}else{
-				Log.i(TAG, "¶Ï¿ªÁ¬½Ó...");
+				Log.i(TAG, "ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½ï¿½...");
 				unbindService(connection);
 				btn_getName.setEnabled(false);
 				btn_getAge.setEnabled(false);
 				btn_getAllInfo.setEnabled(false);	
-				btn_bind.setText("Á¬½Ó");
+				btn_bind.setText("ï¿½ï¿½ï¿½ï¿½");
 				isBinded = false;
-				textView.setText("ÒÑ¶Ï¿ªÁ¬½Ó!");
+				textView.setText("ï¿½Ñ¶Ï¿ï¿½ï¿½ï¿½ï¿½ï¿½!");
 			}
 		}else if(v==this.btn_getName){
-			textView.setText("ÃÀÅ®  ÐÕÃû£º"+beauty.getMac());
+			textView.setText("ï¿½ï¿½Å®  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"+beauty.getMac());
 		}else if(v==this.btn_getAge){
-			textView.setText("ÃÀÅ®  ÄêÁä£º"+beauty.getRssi());		
+			textView.setText("ï¿½ï¿½Å®  ï¿½ï¿½ï¿½ä£º"+beauty.getRssi());		
 		}else if(v==this.btn_getAllInfo){
 			textView.setText(allInfo);
 		}
