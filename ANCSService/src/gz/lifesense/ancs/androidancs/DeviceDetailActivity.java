@@ -156,7 +156,7 @@ public class DeviceDetailActivity extends BaseActivity
 			@Override
 			public void onClick(View v)
 			{
-				showBindDialog("是否取消与"+shareManager.getDeviceName()+"的绑定？");
+				showBindDialog(getResources().getString(R.string.canceland) + shareManager.getDeviceName() + getResources().getString(R.string.cancelbind));
 			}
 		});
 		cb_comming_call.setOnCheckedChangeListener(new OnCheckedChangeListener() 

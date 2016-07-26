@@ -377,22 +377,7 @@ public class DeviceManager
         		{
         			if (!isDeviceConnected()) 
         			{
-        				/*
-        				if (mBluetoothManager == null) 
-        				{
-        					mBluetoothManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
-        					if (mBluetoothManager != null) 
-        					{
-        						mBluetoothAdapter = mBluetoothManager.getAdapter();
-        					}
-        				}
-        				else
-        					mBluetoothAdapter = mBluetoothManager.getAdapter();
-        				
-        				disconnect();
-        				*/
-        				//if(mBluetoothAdapter!=null)
-        				//	mBluetoothAdapter.stopLeScan(null);
+
         				mBluetoothAdapter = mBluetoothManager.getAdapter();
         				if(mBluetoothAdapter!=null)
         				{
@@ -400,14 +385,27 @@ public class DeviceManager
         					if(!mBluetoothAdapter.startDiscovery())
         					{
         						Log.e(TAG, "mBluetoothAdapter.startDiscovery()====1");
-        						initialize();
+        						//initialize();
         					}
 
         					Log.e(TAG, "mBluetoothAdapter.startDiscovery()====2");
         				}
         				
-        				connectLastDevice();
-        				needSendAfterConnect = false;
+        				mBluetoothGatt.disconnect();
+        				mBluetoothGatt.close();
+        				
+        				String address = shareManager.getDeviceAddress();
+        				BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+        				if (device == null) 
+        				{
+        					RLog.w(TAG, "Device not found.  Unable to connect.");
+        				}
+        				else
+        				{
+	        				mBluetoothGatt = device.connectGatt(mContext, false, mGattCallback);
+	        				if(null == mBluetoothGatt)
+	        					RLog.w(TAG, "Device reconnectGatt failed...");
+        				}
         			}
         		}
             }
@@ -581,7 +579,7 @@ public class DeviceManager
 				connectLastDevice();
 				needSendAfterConnect = true;
 			} 
-			else 
+			//else 
 			{
 				byte[] sendCommingCall = pedometerProtocol.sendCommingCall();
 				writeCharacteristic(sendCommingCall);

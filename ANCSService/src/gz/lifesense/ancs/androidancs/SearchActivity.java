@@ -147,7 +147,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener
 				if(mRemoteBlueTooth.isBluetoothOpen())
 					startScan();
 				else
-					showOpenDialog("蓝牙还没打开，是否打开蓝牙？");
+					showOpenDialog(getResources().getString(R.string.reqopen));
 			} catch (RemoteException e)
 			{
 				// TODO Auto-generated catch block
@@ -287,7 +287,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener
 					}
 					if (!deviceNameList.contains(device) && device.getName()!=null&&device.getName().contains("PE")) 
 					{
-						deviceNameList.add(device);// 用于剔除重复硬件
+						deviceNameList.add(device);//
 						DeviceInfo deviceInfo = new DeviceInfo();
 						deviceInfo.setDevice(device);
 						deviceInfo.setDeviceName(getResources().getString(R.string.prename)+device.getName());
@@ -311,7 +311,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener
 		macHolder = deviceInfo.getMac();
 		nameHolder=deviceInfo.getDeviceName();
 		mBluetoothAdapter.stopLeScan(mLeScanCallback);
-		showBindDialog("是否与" + deviceInfo.getDeviceName() + "进行绑定？");
+		showBindDialog(getResources().getString(R.string.ifand) + deviceInfo.getDeviceName() + getResources().getString(R.string.ifbind));
 	}
 
 
