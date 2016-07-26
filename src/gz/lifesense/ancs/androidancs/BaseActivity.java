@@ -21,7 +21,8 @@ import android.widget.TextView;
 
 
 
-public abstract class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends FragmentActivity 
+{
 
 	protected String TAG = this.getClass().getName();
 	protected LinearLayout Layout_center;
@@ -41,14 +42,14 @@ public abstract class BaseActivity extends FragmentActivity {
 	protected Intent intent;
 
 	/**
-	 * 锟斤拷锟斤拷头锟斤拷锟斤拷锟斤拷锟斤拷setHeader_xxxx锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷乜丶锟斤拷锟斤拷锟�
+	 * 
 	 */
 	protected abstract void initHeader();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);// 锟睫憋拷锟斤拷
+		requestWindowFeature(Window.FEATURE_NO_TITLE);//
 		// LifesenseApplication.getApp().addActivity(this);
 		setContentView(R.layout.common_base);
 		initHeaderView();
@@ -59,7 +60,7 @@ public abstract class BaseActivity extends FragmentActivity {
 	public void setContentView(int layoutResID) {
 		super.setContentView(layoutResID);
 
-		if (layoutResID != R.layout.common_base) { // 锟斤拷锟斤拷锟斤拷锟酵ㄖ拷锟叫э拷锟�
+		if (layoutResID != R.layout.common_base) { // 
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 		}
@@ -86,7 +87,7 @@ public abstract class BaseActivity extends FragmentActivity {
 	}
 
 	/**
-	 * 锟斤拷锟斤拷锟叫硷拷锟斤拷锟绞撅拷锟斤拷锟�
+	 * 
 	 * 
 	 * @param layout
 	 */
