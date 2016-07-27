@@ -35,7 +35,7 @@ import android.widget.Toast;
 
 @SuppressLint("NewApi")
 //@SuppressWarnings("unused")
-public class DeviceManager 
+public class DeviceManager
 {
 	private Context mContext;
 
@@ -67,7 +67,6 @@ public class DeviceManager
 	private boolean mStartConnectMonitor = true;
 	private Handler mhandler = new Handler();
 	private int 	mIntervalTime = 20*1000;
-	private int     mTimeCount = 0;
 
 	//private boolean isHangUp = false;
 	private boolean needSendAfterConnect = false;
@@ -384,11 +383,9 @@ public class DeviceManager
         					mBluetoothAdapter.enable();
         					if(!mBluetoothAdapter.startDiscovery())
         					{
-        						Log.e(TAG, "mBluetoothAdapter.startDiscovery()====1");
-        						//initialize();
+        						Log.e(TAG, "mBluetoothAdapter.startDiscovery()====failed");
         					}
 
-        					Log.e(TAG, "mBluetoothAdapter.startDiscovery()====2");
         				}
         				
         				mBluetoothGatt.disconnect();
@@ -409,10 +406,10 @@ public class DeviceManager
         			}
         		}
             }
-            
+            receivedTelegram();
             mhandler.postDelayed(mConnectMonitor, mIntervalTime);
         }
-    };
+    }; 
 	
     void startConnectMonitor()
     {
@@ -423,7 +420,8 @@ public class DeviceManager
     {
     	mhandler.removeCallbacks(mConnectMonitor);
     }
-	
+
+    
 	private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() 
 	{
 		@Override
@@ -467,7 +465,6 @@ public class DeviceManager
 					RLog.e(TAG, "mBluetoothGatt==null");
 				}
 				stopConnectMonitor();
-				mTimeCount = 0;
 			}
 			else if (newState == BluetoothProfile.STATE_DISCONNECTED) 
 			{
@@ -481,13 +478,15 @@ public class DeviceManager
 				Intent intent = new Intent();
 				intent.setAction("DEVICE_DISCONNECT");
 				mContext.sendBroadcast(intent);
-				
+		        
 				if(mStartConnectMonitor)
 					startConnectMonitor();
 				
 			}
 		}
 
+		
+		
 		@Override
 		public void onServicesDiscovered(BluetoothGatt gatt, int status) 
 		{
@@ -739,44 +738,6 @@ public class DeviceManager
 		public void onCattChange(String action, BluetoothGattCharacteristic characteristic);
 	}
 
-	private void sendComingCall2Times() 
-	{
-		Timer timer = new Timer();
-		TimerTask task = new TimerTask() 
-		{
-			public void run() 
-			{
-
-				Log.i("TASK", "shareManager.getIsResponse4Call()＝" + shareManager.getIsResponse4Call() + ",,sendCount=" + sendCount);
-
-				if (!shareManager.getIsResponse4Call() && sendCount < 1) {
-
-					if (isBluetoothOpen()) // 判断蓝牙是否打开
-					{
-						TxtLog.writeTxtToFile(System.currentTimeMillis() + ":sendComingCallNotification," + nameOrNumHolder, TxtLog.filePath, shareManager.getLogFileName());
-						// protobufData.sendComingCallNotification(nameOrNumHolder);
-						byte[] sendCommingCall = pedometerProtocol.sendCommingCall();
-						writeCharacteristic(sendCommingCall);
-					}
-					sendCount++;
-
-				} else {
-
-					this.cancel();
-					sendCount = 0;
-
-					// 发送广播
-					Intent intent = new Intent();
-					intent.setAction("REPLAY_CALL");
-					mContext.sendBroadcast(intent);
-					RLog.d(TAG, "发送广播，REPLAY_CALL");
-				}
-			}
-
-		};
-
-		timer.schedule(task, 5, 2000);
-	}
 
 	// 查询指定电话的联系人姓名，邮箱
 	public String getContactNameByNumber(String number, Context mContext) 
@@ -856,5 +817,6 @@ public class DeviceManager
 		}
 	}
 	*/
+
 
 }

@@ -22,7 +22,7 @@ public class BlueToothService extends Service
 {
 	private final static String TAG = BlueToothService.class.getSimpleName();
 	
-	private DeviceManager mDeviceManager;
+	private DeviceManager mDeviceManager = null;
 	
 	
 	@SuppressWarnings("unused")
@@ -50,6 +50,7 @@ public class BlueToothService extends Service
         // after onUnbind() has already been called
     }
 
+    
     public void onCreate()
     { 
     	if(mDeviceManager==null)
@@ -82,8 +83,10 @@ public class BlueToothService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-    	 flags = START_REDELIVER_INTENT;
-    	 return super.onStartCommand(intent, flags, startId);
+    	Log.i(TAG, "onStartCommand------");
+    	flags = START_STICKY;//START_REDELIVER_INTENT;
+    	return super.onStartCommand(intent, flags, startId);
+    	//return START_STICKY;
     }
 	
     
