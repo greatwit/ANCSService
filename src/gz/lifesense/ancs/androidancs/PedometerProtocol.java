@@ -8,7 +8,7 @@ public class PedometerProtocol
 {
 
     /**
-     * ²éÑ¯Éè±¸ÐÅÏ¢
+     * ï¿½ï¿½Ñ¯ï¿½è±¸ï¿½ï¿½Ï¢
      * @return
      */
     public static byte[] askDeviceInfo()
@@ -19,7 +19,7 @@ public class PedometerProtocol
 
         return bArray;
     }
-    public static byte[] sendMissingCall(){//01ÓÐÎ´½ÓÀ´µç
+    public static byte[] sendMissingCall(){//01ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         String instruct= "A3080201050000B3";
         byte[] bArray = DataTools.decodeHex(instruct.toCharArray());
@@ -29,16 +29,16 @@ public class PedometerProtocol
     }
 
 
-   public static byte[] sendCommingCall(){//02À´µç
+   public static byte[] sendCommingCall(){//02ï¿½ï¿½ï¿½ï¿½
 
-       String instruct= "A3080202010000B0";
+       String instruct= "A3080202010000B0";//A3080202010000B0
        byte[] bArray = DataTools.decodeHex(instruct.toCharArray());
 
        Log.i("COMING", "sendCommingCall!!!!");
        return bArray;
    }
    
-   public static byte[] sendCommingCallReject(){//04¾Ü½Ó
+   public static byte[] sendCommingCallReject(){//04ï¿½Ü½ï¿½
 
        String instruct= "A3080204040000B5";
        byte[] bArray = DataTools.decodeHex(instruct.toCharArray());
@@ -46,7 +46,7 @@ public class PedometerProtocol
 
        return bArray;
    }
-   public static byte[] sendCommingCallReplay(){//05À´µçÒÑ½Ó»òÒÑ²é¿´
+   public static byte[] sendCommingCallReplay(){//05ï¿½ï¿½ï¿½ï¿½ï¿½Ñ½Ó»ï¿½ï¿½Ñ²é¿´
 
        String instruct= "A3080205000000B2";
        byte[] bArray = DataTools.decodeHex(instruct.toCharArray());

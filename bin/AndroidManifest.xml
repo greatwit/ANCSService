@@ -58,8 +58,9 @@
        </activity>
        
        
-	<service android:name="gz.lifesense.ancs.androidancs.BlueToothService">
-		<intent-filter>
+	<service android:name="gz.lifesense.ancs.androidancs.BlueToothService"
+	    android:enabled="true">
+		<intent-filter android:priority="1000">
 			<action android:name="gz.lifesense.ancs.androidancs"/>
 		</intent-filter>
 	</service>
