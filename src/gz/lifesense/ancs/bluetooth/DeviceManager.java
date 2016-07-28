@@ -393,15 +393,16 @@ public class DeviceManager
         				
         				String address = shareManager.getDeviceAddress();
         				BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-        				if (device == null) 
-        				{
-        					RLog.w(TAG, "Device not found.  Unable to connect.");
-        				}
-        				else
+        				if (device != null) 
         				{
 	        				mBluetoothGatt = device.connectGatt(mContext, false, mGattCallback);
 	        				if(null == mBluetoothGatt)
 	        					RLog.w(TAG, "Device reconnectGatt failed...");
+        					
+        				}
+        				else
+        				{
+        					RLog.w(TAG, "Device not found.  Unable to connect.");
         				}
         			}
         		}
