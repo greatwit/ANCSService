@@ -5,6 +5,7 @@ import gz.lifesense.ancs.server.ShareManager;
 import gz.lifesense.ancs.util.RLog;
 import gz.lifesense.ancs.util.TxtLog;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -363,6 +364,38 @@ public class DeviceManager
 		return isConnected;
 	}
 
+	public void setDiscoverableTimeout(int timeout) 
+	{
+		BluetoothAdapter adapter=BluetoothAdapter.getDefaultAdapter();
+		try {
+			Method setDiscoverableTimeout = BluetoothAdapter.class.getMethod("setDiscoverableTimeout", int.class);
+			setDiscoverableTimeout.setAccessible(true);
+			Method setScanMode =BluetoothAdapter.class.getMethod("setScanMode", int.class,int.class);
+			setScanMode.setAccessible(true);
+			
+			setDiscoverableTimeout.invoke(adapter, timeout);
+			setScanMode.invoke(adapter, BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE,timeout);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void closeDiscoverableTimeout() 
+	{
+		BluetoothAdapter adapter=BluetoothAdapter.getDefaultAdapter();
+		try {
+			Method setDiscoverableTimeout = BluetoothAdapter.class.getMethod("setDiscoverableTimeout", int.class);
+			setDiscoverableTimeout.setAccessible(true);
+			Method setScanMode =BluetoothAdapter.class.getMethod("setScanMode", int.class,int.class);
+			setScanMode.setAccessible(true);
+			
+			setDiscoverableTimeout.invoke(adapter, 1);
+			setScanMode.invoke(adapter, BluetoothAdapter.SCAN_MODE_CONNECTABLE,1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
     private Runnable mConnectMonitor=new Runnable() 
     {
         @Override
@@ -385,9 +418,19 @@ public class DeviceManager
         					{
         						Log.e(TAG, "mBluetoothAdapter.startDiscovery()====failed");
         					}
+        					
+        					//开启蓝牙发现功能（300秒）
+        					Intent discoveryIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        					discoveryIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        					discoveryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        					//提示信息
+        					mContext.startActivity(discoveryIntent);
 
         				}
         				
+        				mBluetoothManager.getAdapter();
+        				
+        				/*
         				mBluetoothGatt.disconnect();
         				mBluetoothGatt.close();
         				
@@ -404,6 +447,7 @@ public class DeviceManager
         				{
         					RLog.w(TAG, "Device not found.  Unable to connect.");
         				}
+        				*/
         			}
         		}
             }
