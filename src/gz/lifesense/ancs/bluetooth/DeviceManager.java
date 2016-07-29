@@ -60,15 +60,15 @@ public class DeviceManager
 	private PedometerProtocol pedometerProtocol;
 	private ShareManager shareManager;
 	private BluetoothDevice mDevice;
-	private int sendCount = 0;
+
 
 	private List<BluetoothGattCharacteristic> gattCharacteristics_device;
-	private String nameOrNumHolder;
 
 	//reconnect 
-	private boolean mStartConnectMonitor = true;
+	private boolean mStartConnectMonitor = false;
 	private Handler mhandler = new Handler();
 	private int 	mIntervalTime = 20*1000;
+
 
 	//private boolean isHangUp = false;
 	private boolean needSendAfterConnect = false;
@@ -168,7 +168,7 @@ public class DeviceManager
 							
 						case BluetoothAdapter.STATE_OFF:// last off
 							break;
-						default:
+						default: 
 							break;
 					}
 				}
@@ -275,16 +275,31 @@ public class DeviceManager
 		return result;
 	}
 	
+	public boolean closeBluetooth()
+	{
+		boolean result = false;
+		if (mBluetoothAdapter != null) 
+		{
+			mBluetoothAdapter.disable();
+			result = true;
+		}
+		return result;
+	}
+	
 
+
+	
 	public boolean connect(String address) 
 	{
+		if(isBluetoothOpen()==false)
+				return false;
 		// 发送广播
 		Intent intent = new Intent();
 		intent.setAction("START_CONNECT");
 		mContext.sendBroadcast(intent);
 
+		
 		RLog.i(TAG, "address=" + address);
-
 		if (mBluetoothAdapter == null || address == null) 
 		{
 			RLog.w(TAG, "connect,BluetoothAdapter not initialized or unspecified address.");
@@ -303,7 +318,8 @@ public class DeviceManager
 		// We want to directly connect to the device, so we are setting the
 		// autoConnect
 		//mBluetoothAdapter.stopLeScan(null);
-		mBluetoothGatt = device.connectGatt(mContext, false, mGattCallback);
+		
+		mBluetoothGatt = device.connectGatt(mContext, true, mGattCallback);
 		if(mBluetoothGatt!=null)
 		{
 			mBluetoothGatt.discoverServices();
@@ -374,6 +390,9 @@ public class DeviceManager
 	{
 		boolean isConnected = false;
 
+		if(isBluetoothOpen() == false)
+			return false;
+		
 		if (!shareManager.getDeviceAddress().equals("") && mBluetoothGatt != null) {
 
 			if (mDevice == null) {
@@ -391,10 +410,10 @@ public class DeviceManager
 
 		return isConnected;
 	}
-
+	
+	
 	public void setDiscoverableTimeout(int timeout) 
 	{
-		BluetoothAdapter adapter=BluetoothAdapter.getDefaultAdapter();
 		try 
 		{
 			Method setDiscoverableTimeout = BluetoothAdapter.class.getMethod("setDiscoverableTimeout", int.class);
@@ -402,8 +421,8 @@ public class DeviceManager
 			Method setScanMode =BluetoothAdapter.class.getMethod("setScanMode", int.class,int.class);
 			setScanMode.setAccessible(true);
 			
-			setDiscoverableTimeout.invoke(adapter, timeout);
-			setScanMode.invoke(adapter, BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE,timeout);
+			setDiscoverableTimeout.invoke(mBluetoothAdapter, timeout);
+			setScanMode.invoke(mBluetoothAdapter, BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE,timeout);
 		}
 		catch (Exception e) 
 		{
@@ -413,7 +432,6 @@ public class DeviceManager
 	
 	public void closeDiscoverableTimeout() 
 	{
-		BluetoothAdapter adapter=BluetoothAdapter.getDefaultAdapter();
 		try 
 		{
 			Method setDiscoverableTimeout = BluetoothAdapter.class.getMethod("setDiscoverableTimeout", int.class);
@@ -421,23 +439,23 @@ public class DeviceManager
 			Method setScanMode =BluetoothAdapter.class.getMethod("setScanMode", int.class,int.class);
 			setScanMode.setAccessible(true);
 			
-			setDiscoverableTimeout.invoke(adapter, 1);
-			setScanMode.invoke(adapter, BluetoothAdapter.SCAN_MODE_CONNECTABLE,1);
+			setDiscoverableTimeout.invoke(mBluetoothAdapter, 1);
+			setScanMode.invoke(mBluetoothAdapter, BluetoothAdapter.SCAN_MODE_CONNECTABLE,1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
     private Runnable mConnectMonitor=new Runnable() 
     {
         @Override
         public void run() 
         {
             // TODO Auto-generated method stub
-            Log.w("Run Service", "connecting runnable-------------");
+            Log.w("Run Service", "connecting runnable-------------connect state:"+mConnectionState);
             if(isBluetoothOpen())
             {
-            	//setDiscoverableTimeout(mIntervalTime);
+
         		if (!shareManager.getDeviceAddress().equals("")) 
         		{
         			if (!isDeviceConnected()) 
@@ -445,40 +463,13 @@ public class DeviceManager
         				mBluetoothAdapter = mBluetoothManager.getAdapter();
         				if(mBluetoothAdapter!=null)
         				{
-        					mBluetoothAdapter.enable();
+        					mBluetoothAdapter.cancelDiscovery();
+        					
         					if(!mBluetoothAdapter.startDiscovery())
         					{
         						Log.e(TAG, "mBluetoothAdapter.startDiscovery()====failed");
         					}
         				}
-        				/*
-        				//if(mBluetoothGatt != null)
-        				//	mBluetoothGatt.discoverServices();
-        				
-        				//mBluetoothGatt.disconnect();
-        				//mBluetoothGatt.close();
-        				
-        				String address = shareManager.getDeviceAddress();
-        				BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-        				if (device != null) 
-        				{
-	        				mBluetoothGatt = device.connectGatt(mContext, false, mGattCallback);
-	        				if(null == mBluetoothGatt)
-	        					RLog.w(TAG, "Device reconnectGatt failed...");
-	        				else
-	        					mBluetoothGatt.discoverServices();
-        					
-        				}
-        				else
-        				{
-        					RLog.w(TAG, "Device not found.  Unable to connect.");
-        				}
-        				
-        				Intent intent1 = new Intent();
-        				intent1.setAction("android.bluetooth.action.DISCOVERY_START");
-        				mContext.sendBroadcast(intent1);
-        				*/
-
         				
         				Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         				//discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
@@ -490,7 +481,9 @@ public class DeviceManager
         			}
         		}
             }
-            receivedTelegram();
+            setDiscoverableTimeout(300);
+            
+            //receivedTelegram();
             mhandler.postDelayed(mConnectMonitor, mIntervalTime);
         }
     }; 
@@ -565,18 +558,11 @@ public class DeviceManager
 				mContext.sendBroadcast(intent);
 		        
 				Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-				//discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
-				//discoverableIntent.addFlags(Intent.FLAG_FROM_BACKGROUND);
 				discoverableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
 				mContext.startActivity(discoverableIntent);
 				
-				
-				//setDiscoverableTimeout(mIntervalTime);
-				
-				if(mStartConnectMonitor)
+				if(mStartConnectMonitor&&isBluetoothOpen())
 					startConnectMonitor();
-				
 			}
 		}
 
@@ -588,12 +574,13 @@ public class DeviceManager
 			if (status == BluetoothGatt.GATT_SUCCESS) 
 			{
 				displayGattServices(getSupportedGattServices());
+				RLog.w(TAG, "onServicesDiscovered received GATT_SUCCESS status=: " + status);
 			} else 
 			{
 				RLog.w(TAG, "onServicesDiscovered received: " + status);
 			}
-			RLog.w(TAG, "onServicesDiscovered received======: " + status);
 			receivedTelegram();
+			
 		}
 
 		@Override
@@ -801,12 +788,13 @@ public class DeviceManager
 								descriptorUUID = gattDescriptor.getUuid();
 							}
 							setCharacteristicNotification(gattCharacteristic, true);
-
+							/*
 							// 发送广播
 							Intent intent = new Intent();
 							intent.setAction("DEVICE_CONNECTED");
 							mContext.sendBroadcast(intent);
 							RLog.d(TAG, "发送广播，DEVICE_CONNECTED");
+							*/
 
 						}
 						if (uuid.equalsIgnoreCase("FD18")) 
@@ -822,6 +810,7 @@ public class DeviceManager
 				}
 			}
 	}
+	
 
 	public void setOnCattChange(OnCattChangeListener onCattChange) 
 	{

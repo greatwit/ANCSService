@@ -162,15 +162,8 @@ public class MainActivity extends BaseActivity implements OnClickListener
 						bound_device_llt.setVisibility(View.GONE);
 				}
 				else
-					if(mRemoteBlueTooth.isBlueToothConnected()==false)
+					if(mRemoteBlueTooth.isDeviceConnected()==false)
 						bound_device_llt.setVisibility(View.GONE);
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-				mRemoteBlueTooth.receivedTelegram();
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -196,8 +189,11 @@ public class MainActivity extends BaseActivity implements OnClickListener
 
 		if (!shareManager.getDeviceAddress().equals("")) 
 		{
-			bound_device_llt.setVisibility(View.VISIBLE);
-			device_name_tv.setText(shareManager.getDeviceName());
+				//if(mRemoteBlueTooth!=null &&mRemoteBlueTooth.isBlueToothConnected())
+				{
+					bound_device_llt.setVisibility(View.VISIBLE);
+					device_name_tv.setText(shareManager.getDeviceName());
+				}
 		}
 		else
 		{
