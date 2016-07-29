@@ -119,7 +119,7 @@ public class MainActivity extends BaseActivity implements OnClickListener
 	private void initReceiver()
 	{
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+		//filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
 		filter.addAction("android.bluetooth.device.action.PAIRING_REQUEST");
 		filter.addAction("android.intent.action.BOOT_COMPLETED");// 开机
 		filter.addAction("DEVICE_CONNECTED");
@@ -169,6 +169,13 @@ public class MainActivity extends BaseActivity implements OnClickListener
 				e.printStackTrace();
 			}
 
+			try {
+				mRemoteBlueTooth.receivedTelegram();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 
 		@Override
@@ -225,7 +232,6 @@ public class MainActivity extends BaseActivity implements OnClickListener
 				switch (state) 
 				{
 					case BluetoothAdapter.STATE_TURNING_ON://on
-						
 						break;
 						
 					case BluetoothAdapter.STATE_ON: //last on
