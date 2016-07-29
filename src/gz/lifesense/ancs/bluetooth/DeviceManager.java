@@ -30,6 +30,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.RemoteException;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -92,7 +93,6 @@ public class DeviceManager
 		return mDeviceManager;
 	}
 
-
 	private void initReceiver()
 	{
 		IntentFilter filter = new IntentFilter();
@@ -110,7 +110,8 @@ public class DeviceManager
         @Override  
         public void onReceive(Context context, Intent intent) 
         {
-	        	if (intent.getAction().equals("android.intent.action.PHONE_STATE"))
+        		String action = intent.getAction();
+	        	if (action.equals("android.intent.action.PHONE_STATE"))
 	        	{
                         TelephonyManager tm = (TelephonyManager)context.getSystemService(Service.TELEPHONY_SERVICE);                          
                         switch (tm.getCallState()) 
@@ -121,6 +122,7 @@ public class DeviceManager
 	                             
 	            					receivedTelegram();
 	                                break;  
+	                                
 	                        case TelephonyManager.CALL_STATE_OFFHOOK:  // put up   
 	                        	Log.i(TAG, " CALL_STATE_OFFHOOK");
 	                        	if (!shareManager.getDeviceAddress().equals("")) 
@@ -140,8 +142,36 @@ public class DeviceManager
 	                        	}
 	                        	shareManager.setMissCall(false);
 	                            break;
+	                            
+	                            default:
+	                            	break;
                         }
 	          }
+				if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) 
+				{
+					int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
+					switch (state) 
+					{
+						case BluetoothAdapter.STATE_TURNING_ON://on
+							
+							break;
+							
+						case BluetoothAdapter.STATE_ON: //last on
+							if(!shareManager.getDeviceAddress().equals(""))
+							{
+								connectLastDevice();
+							}
+							break;
+							
+						case BluetoothAdapter.STATE_TURNING_OFF://off
+							break;
+							
+						case BluetoothAdapter.STATE_OFF:// last off
+							break;
+						default:
+							break;
+					}
+				}
         }
 	}//
 
@@ -150,7 +180,6 @@ public class DeviceManager
 	 * 
 	 * @return
 	 */
-	
 	public boolean initialize() 
 	{
 		if(mBluetoothManager!=null)
@@ -213,7 +242,7 @@ public class DeviceManager
 	 */
 	public boolean isBluetoothConnected() 
 	{
-		if (mConnectionState != BluetoothProfile.STATE_DISCONNECTED) 
+		if (mConnectionState == BluetoothProfile.STATE_CONNECTED) 
 		{
 			return true;
 		}
@@ -263,6 +292,7 @@ public class DeviceManager
 		}
 
 		mBluetoothDeviceAddress = address;
+		shareManager.setDeviceAddress(address);
 
 		BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
 		if (device == null) 
@@ -338,10 +368,8 @@ public class DeviceManager
 					}
 			}
 		}).start();
-		
 	}
 	
-
 	public boolean isDeviceConnected() 
 	{
 		boolean isConnected = false;
@@ -367,7 +395,8 @@ public class DeviceManager
 	public void setDiscoverableTimeout(int timeout) 
 	{
 		BluetoothAdapter adapter=BluetoothAdapter.getDefaultAdapter();
-		try {
+		try 
+		{
 			Method setDiscoverableTimeout = BluetoothAdapter.class.getMethod("setDiscoverableTimeout", int.class);
 			setDiscoverableTimeout.setAccessible(true);
 			Method setScanMode =BluetoothAdapter.class.getMethod("setScanMode", int.class,int.class);
@@ -375,7 +404,9 @@ public class DeviceManager
 			
 			setDiscoverableTimeout.invoke(adapter, timeout);
 			setScanMode.invoke(adapter, BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE,timeout);
-		} catch (Exception e) {
+		}
+		catch (Exception e) 
+		{
 			e.printStackTrace();
 		}
 	}
@@ -383,7 +414,8 @@ public class DeviceManager
 	public void closeDiscoverableTimeout() 
 	{
 		BluetoothAdapter adapter=BluetoothAdapter.getDefaultAdapter();
-		try {
+		try 
+		{
 			Method setDiscoverableTimeout = BluetoothAdapter.class.getMethod("setDiscoverableTimeout", int.class);
 			setDiscoverableTimeout.setAccessible(true);
 			Method setScanMode =BluetoothAdapter.class.getMethod("setScanMode", int.class,int.class);
@@ -402,14 +434,14 @@ public class DeviceManager
         public void run() 
         {
             // TODO Auto-generated method stub
-            Log.i("Run Service", "connecting runnable-------------");
+            Log.w("Run Service", "connecting runnable-------------");
             if(isBluetoothOpen())
             {
+            	//setDiscoverableTimeout(mIntervalTime);
         		if (!shareManager.getDeviceAddress().equals("")) 
         		{
         			if (!isDeviceConnected()) 
         			{
-
         				mBluetoothAdapter = mBluetoothManager.getAdapter();
         				if(mBluetoothAdapter!=null)
         				{
@@ -418,21 +450,13 @@ public class DeviceManager
         					{
         						Log.e(TAG, "mBluetoothAdapter.startDiscovery()====failed");
         					}
-        					
-        					//开启蓝牙发现功能（300秒）
-        					Intent discoveryIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        					discoveryIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-        					discoveryIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        					//提示信息
-        					mContext.startActivity(discoveryIntent);
-
         				}
-        				
-        				mBluetoothManager.getAdapter();
-        				
         				/*
-        				mBluetoothGatt.disconnect();
-        				mBluetoothGatt.close();
+        				//if(mBluetoothGatt != null)
+        				//	mBluetoothGatt.discoverServices();
+        				
+        				//mBluetoothGatt.disconnect();
+        				//mBluetoothGatt.close();
         				
         				String address = shareManager.getDeviceAddress();
         				BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
@@ -441,13 +465,28 @@ public class DeviceManager
 	        				mBluetoothGatt = device.connectGatt(mContext, false, mGattCallback);
 	        				if(null == mBluetoothGatt)
 	        					RLog.w(TAG, "Device reconnectGatt failed...");
+	        				else
+	        					mBluetoothGatt.discoverServices();
         					
         				}
         				else
         				{
         					RLog.w(TAG, "Device not found.  Unable to connect.");
         				}
+        				
+        				Intent intent1 = new Intent();
+        				intent1.setAction("android.bluetooth.action.DISCOVERY_START");
+        				mContext.sendBroadcast(intent1);
         				*/
+
+        				
+        				Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        				//discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
+        				discoverableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        				mContext.startActivity(discoverableIntent);
+        				
+        				if(mBluetoothGatt != null)
+        					mBluetoothGatt.discoverServices();
         			}
         		}
             }
@@ -510,6 +549,7 @@ public class DeviceManager
 					RLog.e(TAG, "mBluetoothGatt==null");
 				}
 				stopConnectMonitor();
+				//closeDiscoverableTimeout();
 			}
 			else if (newState == BluetoothProfile.STATE_DISCONNECTED) 
 			{
@@ -524,6 +564,16 @@ public class DeviceManager
 				intent.setAction("DEVICE_DISCONNECT");
 				mContext.sendBroadcast(intent);
 		        
+				Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				//discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
+				//discoverableIntent.addFlags(Intent.FLAG_FROM_BACKGROUND);
+				discoverableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+				mContext.startActivity(discoverableIntent);
+				
+				
+				//setDiscoverableTimeout(mIntervalTime);
+				
 				if(mStartConnectMonitor)
 					startConnectMonitor();
 				
@@ -618,7 +668,7 @@ public class DeviceManager
 	public void receivedTelegram()
 	{
 		Log.i(TAG, "receivedTelegram-------------------------");
-		if (!shareManager.getDeviceAddress().equals("")) 
+		//if (!shareManager.getDeviceAddress().equals("")) 
 		{
 			if (!isDeviceConnected()) 
 			{

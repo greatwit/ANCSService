@@ -20,119 +20,143 @@ public class ShareManager {
 	private  String IS_RESPONSE_Remove="is_response_remove";
 	public static String HARD_VERSION = "hardwareVersion";
 	private String MISSING_CALL="missing_call";
-			
 	
 	
-	private  ShareManager() {
+	
+	private  ShareManager() 
+	{
 		super();
 	}
-	public void clear(){
+	
+	public void clear()
+	{
 		editor.clear().commit();
 	};
 	
 
-	public ShareManager(Context context) {
+	public ShareManager(Context context) 
+	{
 		super();
 		
 		 share = context.getSharedPreferences(SHARE_NAME, Context.MODE_PRIVATE);
 		 editor=share.edit();
 	}
 	
-	public boolean hasMissCall(){
+	public boolean hasMissCall()
+	{
 		boolean result= share.getBoolean(MISSING_CALL,false);
 		RLog.i(TAG, "GET..hasMissCall="+result);
 		return result;
 	}
-	public void setMissCall(boolean isHasMissCall){
+	
+	public void setMissCall(boolean isHasMissCall)
+	{
 		editor.putBoolean(MISSING_CALL, isHasMissCall).commit();
 		RLog.i(TAG, "SET..setMissCall="+isHasMissCall);
 	}
 	
-	public String getDeviceAddress(){
+	public String getDeviceAddress()
+	{
 		String result= share.getString(DEVICE_ADDRESS, "");
 		RLog.i(TAG, "GET..deviceAddress="+result);
 		return result;
 	}
 	
-	public void setDeviceAddress(String deviceAddress){
+	public void setDeviceAddress(String deviceAddress)
+	{
 		editor.putString(DEVICE_ADDRESS, deviceAddress).commit();
 		RLog.i(TAG, "SET..deviceAddress="+deviceAddress);
 	}
 	
-	public String getDeviceName(){
+	public String getDeviceName()
+	{
 		String result= share.getString(DEVICE_NAME, "");
 		RLog.i(TAG, "GET..deviceName="+result);
 		return result;
 	}
 	
-	public void setDeviceName(String deviceName){
+	public void setDeviceName(String deviceName)
+	{
 		editor.putString(DEVICE_NAME, deviceName).commit();
 		RLog.i(TAG, "SET..deviceName="+deviceName);
 	}
 	
-	
-	public void setIsOpenIncomingCall(boolean isOpen){
+	public void setIsOpenIncomingCall(boolean isOpen)
+	{
 		editor.putBoolean(IS_OPEN_INCOMING_CALL, isOpen).commit();
 		RLog.i(TAG, "SET..setIsOpenIncomingCall="+isOpen);
 	}
-	public boolean getIsOpenIncomingCall(){
+	
+	public boolean getIsOpenIncomingCall()
+	{
 		boolean result= share.getBoolean(IS_OPEN_INCOMING_CALL, true);
 		RLog.i(TAG, "GET...getIsOpenIncomingCall="+result);
 		return result;
 	}
-	public void setIsResponse4Call(boolean isResponse){
+	
+	public void setIsResponse4Call(boolean isResponse)
+	{
 		editor.putBoolean(IS_RESPONSE_Call, isResponse).commit();
 		RLog.i(TAG, "SET..setIsResponse4Call="+isResponse);
 	}
-	public boolean getIsResponse4Call(){
+	
+	public boolean getIsResponse4Call()
+	{
 		boolean result= share.getBoolean(IS_RESPONSE_Call, false);
 		RLog.i(TAG, "GET...getIsResponse4Call="+result);
 		return result;
 	}
-	public void setIsResponse4Remove(boolean isResponse){
+	
+	public void setIsResponse4Remove(boolean isResponse)
+	{
 		editor.putBoolean(IS_RESPONSE_Remove, isResponse).commit();
 		RLog.i(TAG, "SET..setIsResponse4Remove="+isResponse);
 	}
-	public boolean getIsResponse4Remove(){
+	
+	public boolean getIsResponse4Remove()
+	{
 		boolean result= share.getBoolean(IS_RESPONSE_Remove, false);
 		RLog.i(TAG, "GET...getIsResponse4Remove="+result);
 		return result;
 	}
 	
 	/**
-	 * ÉèÖÃÉè±¸Ó²¼þ°æ±¾ºÅ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½è±¸Ó²ï¿½ï¿½ï¿½æ±¾ï¿½ï¿½
 	 * @param hardwareVersion
 	 */
-	public void setHardwareVersion(String hardwareVersion){
+	public void setHardwareVersion(String hardwareVersion)
+	{
 		Log.i(TAG, "hardwareVersion==="+hardwareVersion);
 		editor.putString(HARD_VERSION, hardwareVersion).commit();
 	}
 	
 	/**
-	 * »ñÈ¡Éè±¸Ó²¼þ°æ±¾ºÅ
+	 * ï¿½ï¿½È¡ï¿½è±¸Ó²ï¿½ï¿½ï¿½æ±¾ï¿½ï¿½
 	 * @return
 	 */
-	public String getHardwareVersion(){
+	public String getHardwareVersion()
+	{
 		String result= share.getString(HARD_VERSION, "");
 		return result;
 	}
 	
 	
-	
 	/**
-	 * »ñÈ¡textLogÎÄ¼þÃû
+	 * ï¿½ï¿½È¡textLogï¿½Ä¼ï¿½ï¿½ï¿½
 	 * @return
 	 */
-	public String getLogFileName(){
+	public String getLogFileName()
+	{
 		String result= share.getString("logFile", "");
 		return result;
 	}
 	
 	/**
-	 * ÉèÖÃtextLogÎÄ¼þÃû
+	 * ï¿½ï¿½ï¿½ï¿½textLogï¿½Ä¼ï¿½ï¿½ï¿½
 	 * @param LogFileName
 	 */
-	public void setLogFileName(String LogFileName){
+	public void setLogFileName(String LogFileName)
+	{
 		editor.putString("logFile", LogFileName).commit();
 	}
 }

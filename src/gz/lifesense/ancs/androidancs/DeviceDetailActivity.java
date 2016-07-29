@@ -129,14 +129,17 @@ public class DeviceDetailActivity extends BaseActivity
 			@Override
 			public void onClick(View v) 
 			{
-				try {
+				try 
+				{
 					mRemoteBlueTooth.disconnect();
-				} catch (RemoteException e) {
+				} 
+				catch (RemoteException e) 
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				shareManager.setDeviceAddress("");
-				shareManager.setDeviceName("");
+				//shareManager.setDeviceAddress("");
+				//shareManager.setDeviceName("");
 				dismissBindDialog();
 				finish();
 			}
