@@ -9,10 +9,8 @@
     <string name="reqopen">蓝牙还没打开，是否打开蓝牙？</string>
     <string name="ifand">是否与</string>
     <string name="ifbind">的绑定？</string>
-
     <string name="canceland">是否取消与</string>
     <string name="cancelbind">进行绑定？</string>
-    
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="version">VERSION : V0.1_2014.09.02_22.38</string>

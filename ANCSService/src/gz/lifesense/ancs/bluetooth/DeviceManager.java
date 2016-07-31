@@ -2,12 +2,9 @@ package gz.lifesense.ancs.bluetooth;
 
 import gz.lifesense.ancs.server.ShareManager;
 import gz.lifesense.ancs.util.RLog;
-import gz.lifesense.ancs.util.TxtLog;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 import com.bde.ancs.androidplugin.PedometerProtocol;
@@ -32,7 +29,6 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.RemoteException;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
