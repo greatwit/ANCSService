@@ -61,7 +61,7 @@
 	<service android:name="com.bde.ancs.androidplugin.BlueToothService"
 	    android:enabled="true">
 		<intent-filter android:priority="1000">
-			<action android:name="gz.lifesense.ancs.androidplugin"/>
+			<action android:name="com.bde.ancs.androidplugin"/>
 		</intent-filter>
 	</service>
 

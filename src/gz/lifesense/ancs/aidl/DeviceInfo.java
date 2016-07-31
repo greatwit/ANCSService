@@ -4,8 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
 
-public class DeviceInfo {
-
+public class DeviceInfo 
+{
 	private BluetoothDevice device;
 	private int rssi;
 	private String battery;

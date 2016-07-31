@@ -2,6 +2,7 @@ package com.bde.ancs.androidplugin;
 
 import com.bde.ancs.androidplugin.R;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;

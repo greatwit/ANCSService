@@ -141,7 +141,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener
 			{
 				e.printStackTrace();
 			}
-			
+
 			try 
 			{
 				if(mRemoteBlueTooth.isBluetoothOpen())
