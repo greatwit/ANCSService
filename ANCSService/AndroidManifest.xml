@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.bde.ancs.androidancs"
+      package="com.bde.ancs.androidplugin"
       android:versionCode="1"
       android:versionName="1.0">
 
@@ -38,7 +38,7 @@
         android:sharedUserId="android.uid.system"
         android:theme="@style/AppTheme" >
         
-    <activity android:name="gz.lifesense.ancs.androidancs.MainActivity"
+    <activity android:name="com.bde.ancs.androidplugin.MainActivity"
               android:label="@string/app_name">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -47,21 +47,21 @@
     </activity>
         
        <activity
-       		android:name="gz.lifesense.ancs.androidancs.SearchActivity"
+       		android:name="com.bde.ancs.androidplugin.SearchActivity"
        		android:label=""
        		android:screenOrientation="portrait" 
        >
        </activity>
        <activity
-            android:name="gz.lifesense.ancs.androidancs.DeviceDetailActivity"
+            android:name="com.bde.ancs.androidplugin.DeviceDetailActivity"
             android:screenOrientation="portrait" >
        </activity>
        
        
-	<service android:name="gz.lifesense.ancs.androidancs.BlueToothService"
+	<service android:name="com.bde.ancs.androidplugin.BlueToothService"
 	    android:enabled="true">
 		<intent-filter android:priority="1000">
-			<action android:name="gz.lifesense.ancs.androidancs"/>
+			<action android:name="gz.lifesense.ancs.androidplugin"/>
 		</intent-filter>
 	</service>
 

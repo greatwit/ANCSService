@@ -1,6 +1,7 @@
 package gz.lifesense.ancs.aidl;
 import gz.lifesense.ancs.aidl.DeviceInfo;
- interface RemoteBlueTooth {
+ interface RemoteBlueTooth 
+ {
 	String getAllInfo(); 
 	DeviceInfo getDeviceInfo();
 	void setDeviceInfo(in DeviceInfo info);

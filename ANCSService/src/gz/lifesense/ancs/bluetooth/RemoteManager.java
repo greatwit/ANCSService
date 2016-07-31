@@ -16,11 +16,12 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import gz.lifesense.ancs.androidancs.PedometerProtocol;
 import gz.lifesense.ancs.server.ShareManager;
 
 import java.util.List;
 import java.util.UUID;
+
+import com.bde.ancs.androidplugin.PedometerProtocol;
 
 /**
  * Service for managing connection and data communication with a GATT server

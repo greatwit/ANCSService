@@ -1,6 +1,6 @@
 package gz.lifesense.ancs.util;
 
-import com.bde.ancs.androidancs.R;
+import com.bde.ancs.androidplugin.R;
 
 import android.app.Activity;
 import android.content.Context;
