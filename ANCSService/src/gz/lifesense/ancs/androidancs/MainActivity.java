@@ -155,15 +155,21 @@ public class MainActivity extends BaseActivity implements OnClickListener
 				e.printStackTrace();
 			}
 			
-			try { 
+			try 
+			{ 
 				if(mRemoteBlueTooth.isBluetoothOpen()==false)
 				{
 					Log.i(TAG, "onServiceConnected bt no open...");
 						bound_device_llt.setVisibility(View.GONE);
 				}
 				else
-					if(mRemoteBlueTooth.isDeviceConnected()==false)
-						bound_device_llt.setVisibility(View.GONE);
+				{
+					if(mRemoteBlueTooth.isDeviceConnected()==true)
+					{
+						bound_device_llt.setVisibility(View.VISIBLE);
+						device_name_tv.setText(shareManager.getDeviceName());
+					}
+				}
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -189,11 +195,18 @@ public class MainActivity extends BaseActivity implements OnClickListener
 
 		if (!shareManager.getDeviceAddress().equals("")) 
 		{
-				//if(mRemoteBlueTooth!=null &&mRemoteBlueTooth.isBlueToothConnected())
+				try 
 				{
-					bound_device_llt.setVisibility(View.VISIBLE);
-					device_name_tv.setText(shareManager.getDeviceName());
+					if(mRemoteBlueTooth!=null &&mRemoteBlueTooth.isDeviceConnected())
+					{
+						bound_device_llt.setVisibility(View.VISIBLE);
+						device_name_tv.setText(shareManager.getDeviceName());
+					}
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
+				Log.e(TAG, "==================");
 		}
 		else
 		{

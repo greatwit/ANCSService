@@ -367,7 +367,8 @@ public class DeviceManager
 			@Override
 			public void run() 
 			{
-				try {
+				try 
+				{
 						if (mBluetoothAdapter == null || mBluetoothGatt == null) 
 						{
 							RLog.w(TAG, "disconnect,BluetoothAdapter not initialized");
@@ -377,11 +378,11 @@ public class DeviceManager
 						mStartConnectMonitor = false;
 						mBluetoothGatt.disconnect();
 						mConnectionState = BluetoothProfile.STATE_DISCONNECTING;// 修改状态
-					} 
+				} 
 				catch (Exception e) 
 				{
 						e.printStackTrace();
-					}
+				}
 			}
 		}).start();
 	}
@@ -393,15 +394,19 @@ public class DeviceManager
 		if(isBluetoothOpen() == false)
 			return false;
 		
-		if (!shareManager.getDeviceAddress().equals("") && mBluetoothGatt != null) {
+		if (!shareManager.getDeviceAddress().equals("") && mBluetoothGatt != null) 
+		{
 
-			if (mDevice == null) {
+			if (mDevice == null) 
+			{
 				mDevice = mBluetoothAdapter.getRemoteDevice(shareManager.getDeviceAddress());
 			}
 
 			List<BluetoothDevice> list = mBluetoothManager.getConnectedDevices(BluetoothProfile.GATT);
-			for (int i = 0; i < list.size(); i++) {
-				if (list.get(i).getAddress().equals(shareManager.getDeviceAddress())) {
+			for (int i = 0; i < list.size(); i++) 
+			{
+				if (list.get(i).getAddress().equals(shareManager.getDeviceAddress())) 
+				{
 					isConnected = true;
 				}
 			}
@@ -655,13 +660,13 @@ public class DeviceManager
 	public void receivedTelegram()
 	{
 		Log.i(TAG, "receivedTelegram-------------------------");
-		//if (!shareManager.getDeviceAddress().equals("")) 
+		if (isBluetoothConnected()) 
 		{
 			if (!isDeviceConnected()) 
 			{
 				connectLastDevice();
 				needSendAfterConnect = true;
-			} 
+			}
 			//else 
 			{
 				byte[] sendCommingCall = pedometerProtocol.sendCommingCall();
@@ -721,7 +726,8 @@ public class DeviceManager
 			return;
 		}
 
-		if (enableIndication(mBluetoothGatt, true, characteristic)) {
+		if (enableIndication(mBluetoothGatt, true, characteristic)) 
+		{
 			mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
 		}
 
@@ -745,7 +751,9 @@ public class DeviceManager
 			RLog.w(TAG, "enableIndication");
 
 			clientConfig.setValue(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE);
-		} else {
+		} 
+		else 
+		{
 			clientConfig.setValue(BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE);
 		}
 		return gatt.writeDescriptor(clientConfig);
@@ -777,7 +785,7 @@ public class DeviceManager
 						uuid = uuid.substring(4, 8);
 
 						RLog.i(TAG, "uuid====" + uuid);
-						if (uuid.equalsIgnoreCase("fd00")) 
+						if(uuid.equalsIgnoreCase("fd00")) 
 						{
 							RLog.i(TAG, "uuid=fcc7!!!");
 
