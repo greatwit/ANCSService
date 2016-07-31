@@ -1,6 +1,5 @@
 package gz.lifesense.ancs.bluetooth;
 
-import gz.lifesense.ancs.androidancs.PedometerProtocol;
 import gz.lifesense.ancs.server.ShareManager;
 import gz.lifesense.ancs.util.RLog;
 import gz.lifesense.ancs.util.TxtLog;
@@ -10,6 +9,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+
+import com.bde.ancs.androidplugin.PedometerProtocol;
+
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;

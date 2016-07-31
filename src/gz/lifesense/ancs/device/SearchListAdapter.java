@@ -3,7 +3,7 @@ package gz.lifesense.ancs.device;
 
 import java.util.ArrayList;
 
-import com.bde.ancs.androidancs.R;
+import com.bde.ancs.androidplugin.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;
