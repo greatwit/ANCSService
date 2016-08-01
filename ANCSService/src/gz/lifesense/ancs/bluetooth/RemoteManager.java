@@ -21,7 +21,7 @@ import gz.lifesense.ancs.server.ShareManager;
 import java.util.List;
 import java.util.UUID;
 
-import com.bde.ancs.androidplugin.PedometerProtocol;
+import com.bde.ancs.amberbe1.PedometerProtocol;
 
 /**
  * Service for managing connection and data communication with a GATT server

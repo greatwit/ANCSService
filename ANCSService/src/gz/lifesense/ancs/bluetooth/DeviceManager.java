@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 
-import com.bde.ancs.androidplugin.PedometerProtocol;
+import com.bde.ancs.amberbe1.PedometerProtocol;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -118,6 +118,7 @@ public class DeviceManager
 	                                String incoming_number = intent.getStringExtra("incoming_number");  
 	                                Log.i(TAG, "RINGING :"+ incoming_number);  
 	                             
+	            					receivedTelegram();
 	            					receivedTelegram();
 	                                break;  
 	                                
