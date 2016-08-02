@@ -313,8 +313,8 @@ public abstract class BaseActivity extends FragmentActivity
 		View view = LayoutInflater.from(this).inflate(R.layout.bind_success_dialog_layout, null);
 		successDialog = new Dialog(this, R.style.Dialog);
 		successDialog.setContentView(view);
-
 	}
+	
 	public void dismissConnectedDialog(){
 		if (successDialog!=null&&successDialog.isShowing()) {
 			successDialog.dismiss();
@@ -322,8 +322,10 @@ public abstract class BaseActivity extends FragmentActivity
 	}
 	
 	
-	public void showConnectdDialog(){
-		successDialog.show();
+	public void showConnectdDialog()
+	{
+		if (successDialog!=null)
+			successDialog.show();
 	}
 
 	
