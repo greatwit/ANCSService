@@ -149,6 +149,23 @@ this.receivedTelegram();
 reply.writeNoException();
 return true;
 }
+case TRANSACTION_getDiscoverDuration:
+{
+data.enforceInterface(DESCRIPTOR);
+boolean _result = this.getDiscoverDuration();
+reply.writeNoException();
+reply.writeInt(((_result)?(1):(0)));
+return true;
+}
+case TRANSACTION_setDiscoverDuration:
+{
+data.enforceInterface(DESCRIPTOR);
+boolean _arg0;
+_arg0 = (0!=data.readInt());
+this.setDiscoverDuration(_arg0);
+reply.writeNoException();
+return true;
+}
 case TRANSACTION_stopServer:
 {
 data.enforceInterface(DESCRIPTOR);
@@ -374,6 +391,38 @@ _reply.recycle();
 _data.recycle();
 }
 }
+@Override public boolean getDiscoverDuration() throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+boolean _result;
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+mRemote.transact(Stub.TRANSACTION_getDiscoverDuration, _data, _reply, 0);
+_reply.readException();
+_result = (0!=_reply.readInt());
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+return _result;
+}
+@Override public void setDiscoverDuration(boolean duration) throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+_data.writeInt(((duration)?(1):(0)));
+mRemote.transact(Stub.TRANSACTION_setDiscoverDuration, _data, _reply, 0);
+_reply.readException();
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+}
 @Override public void stopServer() throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
@@ -401,7 +450,9 @@ static final int TRANSACTION_isBlueToothConnected = (android.os.IBinder.FIRST_CA
 static final int TRANSACTION_isDeviceConnected = (android.os.IBinder.FIRST_CALL_TRANSACTION + 9);
 static final int TRANSACTION_writeByte = (android.os.IBinder.FIRST_CALL_TRANSACTION + 10);
 static final int TRANSACTION_receivedTelegram = (android.os.IBinder.FIRST_CALL_TRANSACTION + 11);
-static final int TRANSACTION_stopServer = (android.os.IBinder.FIRST_CALL_TRANSACTION + 12);
+static final int TRANSACTION_getDiscoverDuration = (android.os.IBinder.FIRST_CALL_TRANSACTION + 12);
+static final int TRANSACTION_setDiscoverDuration = (android.os.IBinder.FIRST_CALL_TRANSACTION + 13);
+static final int TRANSACTION_stopServer = (android.os.IBinder.FIRST_CALL_TRANSACTION + 14);
 }
 public java.lang.String getAllInfo() throws android.os.RemoteException;
 public DeviceInfo getDeviceInfo() throws android.os.RemoteException;
@@ -415,5 +466,7 @@ public boolean isBlueToothConnected() throws android.os.RemoteException;
 public boolean isDeviceConnected() throws android.os.RemoteException;
 public void writeByte(byte[] value) throws android.os.RemoteException;
 public void receivedTelegram() throws android.os.RemoteException;
+public boolean getDiscoverDuration() throws android.os.RemoteException;
+public void setDiscoverDuration(boolean duration) throws android.os.RemoteException;
 public void stopServer() throws android.os.RemoteException;
 }

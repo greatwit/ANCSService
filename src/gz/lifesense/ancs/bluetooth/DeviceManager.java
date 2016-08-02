@@ -63,6 +63,7 @@ public class DeviceManager
 	private List<BluetoothGattCharacteristic> gattCharacteristics_device;
 
 	//reconnect 
+	private boolean mbNeedDuration = true;
 	private boolean mStartConnectMonitor = false;
 	private Handler mhandler = new Handler();
 	private int 	mIntervalTime = 20*1000;
@@ -152,7 +153,6 @@ public class DeviceManager
 					switch (state) 
 					{
 						case BluetoothAdapter.STATE_TURNING_ON://on
-							
 							break;
 							
 						case BluetoothAdapter.STATE_ON: //last on
@@ -213,6 +213,18 @@ public class DeviceManager
 	{
 		mContext.unregisterReceiver(mStateReceiver);
 		return true;
+	}
+	
+	public boolean getDiscoverDuration()
+	{
+		if(!isBluetoothOpen())
+			return false;
+		return mbNeedDuration;
+	}
+	
+	public void    setDiscoverDuration(boolean duration)
+	{
+		mbNeedDuration = duration;
 	}
 	
 	/**
@@ -464,24 +476,37 @@ public class DeviceManager
         		{
         			if (!isDeviceConnected()) 
         			{
+        				/*
         				mBluetoothAdapter = mBluetoothManager.getAdapter();
         				if(mBluetoothAdapter!=null)
         				{
-        					mBluetoothAdapter.cancelDiscovery();
+        					//mBluetoothAdapter.cancelDiscovery();
         					
         					if(!mBluetoothAdapter.startDiscovery())
         					{
         						Log.e(TAG, "mBluetoothAdapter.startDiscovery()====failed");
         					}
         				}
-        				
-        				Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        				*/
+        				//Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         				//discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
-        				discoverableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        				mContext.startActivity(discoverableIntent);
+        				//discoverableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        				//mContext.startActivity(discoverableIntent);
+        				String address = shareManager.getDeviceAddress();
+        				if (!address.equals("")) 
+        				{
+	        				BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+	        				if (device == null) 
+	        				{
+	        					RLog.w(TAG, "Device not found.  Unable to connect.");
+	        				}
+        				}
         				
         				if(mBluetoothGatt != null)
-        					mBluetoothGatt.discoverServices();
+        				{
+        					if(mBluetoothGatt.discoverServices())
+        						RLog.w(TAG, "Device discoverServices successfully.");
+        				}
         			}
         		}
             }
@@ -502,6 +527,14 @@ public class DeviceManager
     	mhandler.removeCallbacks(mConnectMonitor);
     }
 
+    void sendConnectedBroad()
+    {
+		// 发送广播
+		Intent intent = new Intent();
+		intent.setAction("DEVICE_CONNECTED");
+		mContext.sendBroadcast(intent);
+		RLog.d(TAG, "发送广播，DEVICE_CONNECTED");
+    }
     
 	private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() 
 	{
@@ -514,17 +547,12 @@ public class DeviceManager
 				Log.w("DISCONNECT", "Connected to GATT server.");
 				if (mBluetoothGatt != null) 
 				{
-
 					mConnectionState = BluetoothProfile.STATE_CONNECTED;
 					String intentAction = BluetoothContent.ACTION_GATT_CONNECTED;
 					// onCattChangeListener.onCattChange(intentAction, null);
 					RLog.w(TAG, "Attempting to start service discovery:" + mBluetoothGatt.discoverServices());
 
-					// 发送广播
-					Intent intent = new Intent();
-					intent.setAction("DEVICE_CONNECTED");
-					mContext.sendBroadcast(intent);
-					RLog.d(TAG, "发送广播，DEVICE_CONNECTED");
+					sendConnectedBroad();
 					
 					if (needSendAfterConnect) 
 					{
@@ -561,9 +589,9 @@ public class DeviceManager
 				intent.setAction("DEVICE_DISCONNECT");
 				mContext.sendBroadcast(intent);
 		        
-				Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-				discoverableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				mContext.startActivity(discoverableIntent);
+				//Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				//discoverableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				//mContext.startActivity(discoverableIntent);
 				
 				if(mStartConnectMonitor&&isBluetoothOpen())
 					startConnectMonitor();
@@ -571,21 +599,20 @@ public class DeviceManager
 		}
 
 		
-		
 		@Override
 		public void onServicesDiscovered(BluetoothGatt gatt, int status) 
 		{
 			if (status == BluetoothGatt.GATT_SUCCESS) 
 			{
 				displayGattServices(getSupportedGattServices());
+				sendConnectedBroad();
 				RLog.w(TAG, "onServicesDiscovered received GATT_SUCCESS status=: " + status);
 			} else 
 			{
 				RLog.w(TAG, "onServicesDiscovered received: " + status);
 			}
 			receivedTelegram();
-			
-		}
+		} 
 
 		@Override
 		public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) 
@@ -783,11 +810,9 @@ public class DeviceManager
 						uuid = gattCharacteristic.getUuid().toString();
 						uuid = uuid.substring(4, 8);
 
-						RLog.i(TAG, "uuid====" + uuid);
-						if(uuid.equalsIgnoreCase("fd00")) 
+						RLog.w(TAG, "target uuid====" + uuid);
+						if(uuid.equalsIgnoreCase("fd00")||uuid.equalsIgnoreCase("FD00")) 
 						{
-							RLog.i(TAG, "uuid=fcc7!!!");
-
 							List<BluetoothGattDescriptor> gattDescriptors = gattCharacteristic.getDescriptors();
 							for (BluetoothGattDescriptor gattDescriptor : gattDescriptors) 
 							{
@@ -795,13 +820,6 @@ public class DeviceManager
 								descriptorUUID = gattDescriptor.getUuid();
 							}
 							setCharacteristicNotification(gattCharacteristic, true);
-							/*
-							// 发送广播
-							Intent intent = new Intent();
-							intent.setAction("DEVICE_CONNECTED");
-							mContext.sendBroadcast(intent);
-							RLog.d(TAG, "发送广播，DEVICE_CONNECTED");
-							*/
 
 						}
 						if (uuid.equalsIgnoreCase("FD18")) 

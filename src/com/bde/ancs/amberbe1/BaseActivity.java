@@ -258,7 +258,7 @@ public abstract class BaseActivity extends FragmentActivity
 			@Override
 			public void onClick(View v) 
 			{
-				if (btOpenDialog!=null&&btOpenDialog.isShowing()) 
+				if (btOpenDialog!=null && btOpenDialog.isShowing()) 
 				{
 					btOpenDialog.dismiss();
 				}
@@ -269,7 +269,7 @@ public abstract class BaseActivity extends FragmentActivity
 	
 	public void dismissOpenDialog()
 	{
-		if (btOpenDialog!=null&&btOpenDialog.isShowing()) 
+		if (btOpenDialog!=null && btOpenDialog.isShowing()) 
 		{
 			btOpenDialog.dismiss();
 		}
@@ -302,6 +302,7 @@ public abstract class BaseActivity extends FragmentActivity
 			bindDialog.dismiss();
 		}
 	}
+	
 	public void showBindDialog(String text) 
 	{
 		((TextView) bindDialog.findViewById(R.id.context_dialog_tv)).setText(text);
@@ -319,7 +320,7 @@ public abstract class BaseActivity extends FragmentActivity
 		if (successDialog!=null&&successDialog.isShowing()) {
 			successDialog.dismiss();
 		}
-	}
+	} 
 	
 	
 	public void showConnectdDialog()

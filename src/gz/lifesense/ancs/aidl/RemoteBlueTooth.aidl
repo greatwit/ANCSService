@@ -16,5 +16,8 @@ interface RemoteBlueTooth
 	void    writeByte(in byte[] value);
 	void 	receivedTelegram();
 	
+	boolean getDiscoverDuration();
+	void    setDiscoverDuration(boolean duration);
+	
 	void 	stopServer();
 }

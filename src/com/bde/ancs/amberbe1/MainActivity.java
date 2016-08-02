@@ -52,6 +52,7 @@ public class MainActivity extends BaseActivity implements OnClickListener
 	DeviceInfo beauty = null;
 	boolean isBinded=false;
 	ExternServiceConnection mConnection = new ExternServiceConnection();
+	private static final int  REQUEST_DISCOVERABLE_BLUETOOTH = 3;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -71,6 +72,8 @@ public class MainActivity extends BaseActivity implements OnClickListener
 		Intent intent  = new Intent(Consts.actionName);
 		intent.setPackage(getPackageName());
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);	
+		
+
 	}
 
 	private void initView() 
@@ -92,8 +95,6 @@ public class MainActivity extends BaseActivity implements OnClickListener
 	            dismissBindDialog();
 			}
 		});
-		
-
 	}
 	
 	@Override
@@ -175,6 +176,22 @@ public class MainActivity extends BaseActivity implements OnClickListener
 				e.printStackTrace();
 			}
 			
+			if(mRemoteBlueTooth != null)
+			{
+				try {
+					if(mRemoteBlueTooth.getDiscoverDuration())
+					{
+					    Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+					    discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 0);
+					    startActivityForResult(discoverableIntent, REQUEST_DISCOVERABLE_BLUETOOTH);
+					    mRemoteBlueTooth.setDiscoverDuration(false);
+					}
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
 		}
 
 		@Override
@@ -184,7 +201,12 @@ public class MainActivity extends BaseActivity implements OnClickListener
 
 	}//
 	
-
+	@Override
+	protected void onStart() 
+	{
+		super.onStart();
+	}
+	
 	@Override
 	protected void onResume() 
 	{
