@@ -40,7 +40,7 @@ public class BlueToothService extends Service
     {
         // All clients have unbound with unbindService()
 		Log.i(TAG, "server onUnbind");
-        return true;
+		return super.onUnbind(intent);
     }
 
     @Override
@@ -48,6 +48,8 @@ public class BlueToothService extends Service
     {
         // A client is binding to the service with bindService(),
         // after onUnbind() has already been called
+    	Log.d("LOG","LocalService ->onRebind"); 
+        super.onRebind(intent);
     }
 
     
@@ -73,18 +75,19 @@ public class BlueToothService extends Service
     @Override
     public void onDestroy()
     {
-    	//super.onDestroy();
+    	
     	Log.i(TAG, "server onDestroy");
     	Intent localIntent = new Intent();
     	localIntent.setClass(this, BlueToothService.class); // 
     	startService(localIntent);
+    	super.onDestroy();
     }
 	
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
     	Log.i(TAG, "onStartCommand------");
-    	flags = START_STICKY;//START_REDELIVER_INTENT;
+    	flags = START_REDELIVER_INTENT;//START_REDELIVER_INTENT; //START_STICKY
     	return super.onStartCommand(intent, flags, startId);
     	//return START_STICKY;
     }

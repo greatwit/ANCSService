@@ -37,7 +37,7 @@ public class MainActivity extends BaseActivity implements OnClickListener
 	private RelativeLayout layout_device_item;
 	BluetoothAdapter mBluetoothAdapter;
 	private final int REQUEST_ENABLE_BT = 0;
-	private BluetoothStateReceiver btStateReceiver;
+	private BluetoothStateReceiver btStateReceiver = new BluetoothStateReceiver();
 //	private TextView device_name;
 	private String TAG = "MainActivity";
 
@@ -62,18 +62,15 @@ public class MainActivity extends BaseActivity implements OnClickListener
 		setCenterView(R.layout.activity_main);
 
 		initView();
-		shareManager 	= new ShareManager(MainActivity.this);
-		btStateReceiver = new BluetoothStateReceiver();
 		initReceiver();
+		shareManager 	= new ShareManager(MainActivity.this);
 		 
 		Intent intentServer = new Intent(MainActivity.this, BlueToothService.class);  
         startService(intentServer); 
 		
 		Intent intent  = new Intent(Consts.actionName);
 		intent.setPackage(getPackageName());
-		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);	
-		
-
+		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
 
 	private void initView() 
@@ -341,6 +338,5 @@ public class MainActivity extends BaseActivity implements OnClickListener
 		setHeader_Title(getResources().getString(R.string.title));
 	}
 
-
-
 }
+
