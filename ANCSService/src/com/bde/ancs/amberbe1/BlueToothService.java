@@ -177,6 +177,18 @@ public class BlueToothService extends Service
 			// TODO Auto-generated method stub
 			return mDeviceManager.isBluetoothConnected();
 		}
+		
+		@Override
+		public boolean getDiscoverDuration() throws RemoteException {
+			// TODO Auto-generated method stub
+			return mDeviceManager.getDiscoverDuration();
+		}
+		
+		@Override
+		public void setDiscoverDuration(boolean duration) throws RemoteException {
+			// TODO Auto-generated method stub
+			mDeviceManager.setDiscoverDuration(duration);
+		}
 	}
 	
 }
