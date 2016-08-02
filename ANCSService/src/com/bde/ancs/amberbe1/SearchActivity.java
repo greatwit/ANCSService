@@ -236,6 +236,7 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener
 				stopScan();
 			}
 		});
+
 		initConnectedDialog(new OnClickListener() 
 		{
 			@Override
@@ -243,7 +244,6 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener
 			{
 			}
 		});
-		
 
 	}
 

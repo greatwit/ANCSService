@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: E:\\weipengWorkspace\\AppWorkspace\\ANCSService\\src\\gz\\lifesense\\ancs\\aidl\\RemoteBlueTooth.aidl
+ * Original file: D:\\android_env\\workspace\\ANCSService\\src\\gz\\lifesense\\ancs\\aidl\\RemoteBlueTooth.aidl
  */
 package gz.lifesense.ancs.aidl;
 public interface RemoteBlueTooth extends android.os.IInterface
