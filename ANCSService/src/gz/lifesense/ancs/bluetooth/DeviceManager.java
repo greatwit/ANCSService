@@ -573,7 +573,7 @@ public class DeviceManager
 				{
 					RLog.e(TAG, "mBluetoothGatt==null");
 				}
-				stopConnectMonitor();
+				//stopConnectMonitor();
 				//closeDiscoverableTimeout();
 			}
 			else if (newState == BluetoothProfile.STATE_DISCONNECTED) 
@@ -593,8 +593,8 @@ public class DeviceManager
 				//discoverableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				//mContext.startActivity(discoverableIntent);
 				
-				if(mStartConnectMonitor&&isBluetoothOpen())
-					startConnectMonitor();
+				//if(mStartConnectMonitor&&isBluetoothOpen())
+				//	startConnectMonitor();
 			}
 		}
 

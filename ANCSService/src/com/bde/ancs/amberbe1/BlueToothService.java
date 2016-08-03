@@ -2,6 +2,7 @@ package com.bde.ancs.amberbe1;
 
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -40,6 +41,9 @@ public class BlueToothService extends Service
     {
         // All clients have unbound with unbindService()
 		Log.i(TAG, "server onUnbind");
+    	Intent localIntent = new Intent();
+    	localIntent.setClass(this, BlueToothService.class); // 
+    	startService(localIntent);
 		return super.onUnbind(intent);
     }
 
@@ -86,8 +90,16 @@ public class BlueToothService extends Service
     public int onStartCommand(Intent intent, int flags, int startId)
     {
     	Log.i(TAG, "onStartCommand------");
-    	flags = START_STICKY;//START_REDELIVER_INTENT; //START_STICKY
-    	return super.onStartCommand(intent, flags, startId);
+    	
+    	Notification notification=new Notification(R.drawable.logo,"缘渡手串" ,System.currentTimeMillis());
+    	notification.setLatestEventInfo(this,"来电助手", "缘渡手串", null);
+    			//设置通知默认效果
+    	notification.flags=Notification.FLAG_SHOW_LIGHTS;
+    	startForeground(1,notification);
+    	
+    	return START_STICKY_COMPATIBILITY;
+    	//flags = START_STICKY;//START_REDELIVER_INTENT; //START_STICKY
+    	//return super.onStartCommand(intent, flags, startId);
     	//return START_STICKY;
     }
 	
