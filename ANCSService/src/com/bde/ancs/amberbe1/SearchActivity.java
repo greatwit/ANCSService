@@ -74,9 +74,9 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener
 					break;
 					
 				case SHOW_CONNECTED_CONNECTED:
-					ShareManager shareManager=new ShareManager(SearchActivity.this);
-					shareManager.setDeviceAddress(macHolder);
-					shareManager.setDeviceName(nameHolder);
+					//ShareManager shareManager=new ShareManager(SearchActivity.this);
+					//shareManager.setDeviceAddress(macHolder);
+					//shareManager.setDeviceName(nameHolder);
 					showConnectdDialog();
 					sendEmptyMessageDelayed(RETURN_TO_MAIN, 3000);
 					break;
@@ -228,11 +228,16 @@ public class SearchActivity extends BaseActivity implements OnItemClickListener
 				try 
 				{
 					mRemoteBlueTooth.connect(macHolder);
+					
+					ShareManager shareManager=new ShareManager(SearchActivity.this);
+					shareManager.setDeviceAddress(macHolder);
+					shareManager.setDeviceName(nameHolder);
 				} catch (RemoteException e) 
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				Log.e(TAG, "===============BIND========="+macHolder);
 				stopScan();
 			}
 		});
