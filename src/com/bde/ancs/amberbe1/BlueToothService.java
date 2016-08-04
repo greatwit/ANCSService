@@ -91,9 +91,8 @@ public class BlueToothService extends Service
     {
     	Log.i(TAG, "onStartCommand------");
     	
-    	Notification notification=new Notification(R.drawable.logo,"缘渡手串" ,System.currentTimeMillis());
-    	notification.setLatestEventInfo(this,"来电助手", "缘渡手串", null);
-    			//设置通知默认效果
+    	Notification notification=new Notification(R.drawable.logo, getResources().getString(R.string.prename) ,System.currentTimeMillis());
+    	notification.setLatestEventInfo(this,getResources().getString(R.string.app_name) , getResources().getString(R.string.prename), null);
     	notification.flags=Notification.FLAG_SHOW_LIGHTS;
     	startForeground(1,notification);
     	
