@@ -3,9 +3,15 @@ package com.bde.ancs.amberbe1;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
 import gz.lifesense.ancs.aidl.DeviceInfo;
@@ -64,6 +70,7 @@ public class BlueToothService extends Service
     		mDeviceManager = DeviceManager.getInstance(BlueToothService.this);
     		mDeviceManager.initialize();
     		mDeviceManager.connectLastDevice();
+    		mDeviceManager.setHandler(myHandler);
     	}
     	super.onCreate();
     	Log.v(TAG, "Service onCreate");
@@ -91,17 +98,58 @@ public class BlueToothService extends Service
     {
     	Log.i(TAG, "onStartCommand------");
     	
-    	Notification notification=new Notification(R.drawable.logo, getResources().getString(R.string.prename) ,System.currentTimeMillis());
-    	notification.setLatestEventInfo(this,getResources().getString(R.string.app_name) , getResources().getString(R.string.prename), null);
-    	notification.flags=Notification.FLAG_SHOW_LIGHTS;
-    	startForeground(1,notification);
-    	
-    	return START_STICKY_COMPATIBILITY;
-    	//flags = START_STICKY;//START_REDELIVER_INTENT; //START_STICKY
-    	//return super.onStartCommand(intent, flags, startId);
+    	//Notification notification=new Notification(R.drawable.logo, getResources().getString(R.string.prename) ,System.currentTimeMillis());
+    	//notification.setLatestEventInfo(this,getResources().getString(R.string.app_name) , getResources().getString(R.string.prename), null);
+    	//notification.flags=Notification.FLAG_SHOW_LIGHTS;
+    	//startForeground(1,notification);
+    	RunningNotifiction(this);
+    	//return START_STICKY_COMPATIBILITY;
+    	flags = START_STICKY;//START_REDELIVER_INTENT; //START_STICKY
+    	return super.onStartCommand(intent, flags, startId);
     	//return START_STICKY;
     }
 	
+    Handler myHandler = new Handler() 
+    {  
+        public void handleMessage(Message msg) 
+        {   
+             switch (msg.what) 
+             {   
+                  case 0:  
+                    startService(new Intent(BlueToothService.this, BlueToothService.class)); 
+                       break;   
+             }   
+             super.handleMessage(msg);   
+        }   
+   };  
+    
+    
+	NotificationManager notimanager;
+	NotificationManager updatenm;
+	int updatenm_id=19830512;
+	int notification_id=5188;
+public void RunningNotifiction(Context context)
+{
+    if(notimanager!=null)return;
+    notimanager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+    Intent intent = new Intent();
+    intent.setClass(context,BlueToothService.class);
+	intent.addCategory(Intent.CATEGORY_LAUNCHER);  
+	intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+	
+	CharSequence appName = context.getString(R.string.app_name);
+	Notification notification = new Notification(R.drawable.logo,
+			appName, System.currentTimeMillis());
+	notification.flags = Notification.FLAG_ONGOING_EVENT;
+	CharSequence appDescription = getResources().getString(R.string.prename);
+	
+	notification.setLatestEventInfo(context, appName,
+		appDescription, PendingIntent.getActivity(((ContextWrapper) context).getBaseContext(),
+		0, intent, PendingIntent.FLAG_CANCEL_CURRENT));
+	
+	notimanager.notify(notification_id, notification);
+}
     
     
 	private class ServerBinder extends RemoteBlueTooth.Stub

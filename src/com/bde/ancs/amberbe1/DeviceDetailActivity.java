@@ -237,7 +237,7 @@ public class DeviceDetailActivity extends BaseActivity
 			@Override
 			public void onClick(View v) 
 			{
-				shareManager.setDeviceName(et_modify_name.getText().toString());
+				//shareManager.setDeviceName(et_modify_name.getText().toString());
 				dismissModifyNameDialog();
 				tv_device_name.setText(et_modify_name.getText().toString());
 

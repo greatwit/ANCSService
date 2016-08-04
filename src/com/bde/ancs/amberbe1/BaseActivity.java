@@ -316,9 +316,11 @@ public abstract class BaseActivity extends FragmentActivity
 		successDialog.setContentView(view);
 	}
 	
-	public void dismissConnectedDialog(){
-		if (successDialog!=null&&successDialog.isShowing()) {
-			successDialog.dismiss();
+	public void dismissConnectedDialog()
+	{
+		if (successDialog!=null&&successDialog.isShowing()) 
+		{
+			 successDialog.dismiss();
 		}
 	} 
 	

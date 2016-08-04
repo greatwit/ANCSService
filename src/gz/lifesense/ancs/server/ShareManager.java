@@ -1,6 +1,9 @@
 package gz.lifesense.ancs.server;
 
 import gz.lifesense.ancs.util.RLog;
+
+import com.bde.ancs.amberbe1.R;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -71,6 +74,7 @@ public class ShareManager {
 	public String getDeviceName()
 	{
 		String result= share.getString(DEVICE_NAME, "");
+
 		RLog.i(TAG, "GET..deviceName="+result);
 		return result;
 	}

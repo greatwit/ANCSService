@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity implements OnClickListener
 		initView();
 		initReceiver();
 		shareManager 	= new ShareManager(MainActivity.this);
-		 
+		
 		Intent intentServer = new Intent(MainActivity.this, BlueToothService.class);  
         startService(intentServer); 
 		
@@ -165,14 +165,17 @@ public class MainActivity extends BaseActivity implements OnClickListener
 					if(mRemoteBlueTooth.isDeviceConnected()==true)
 					{
 						bound_device_llt.setVisibility(View.VISIBLE);
-						device_name_tv.setText(shareManager.getDeviceName());
+						//if(shareManager.getDeviceName().equals(""))
+						//	device_name_tv.setText(getResources().getString(R.string.prename)+"PE841M");
+						//else
+							device_name_tv.setText(shareManager.getDeviceName());
 					}
 				}
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+			/*
 			if(mRemoteBlueTooth != null)
 			{
 				try {
@@ -188,7 +191,7 @@ public class MainActivity extends BaseActivity implements OnClickListener
 					e.printStackTrace();
 				}
 			}
-			
+			*/
 		}
 
 		@Override
@@ -219,7 +222,10 @@ public class MainActivity extends BaseActivity implements OnClickListener
 					if(mRemoteBlueTooth!=null &&mRemoteBlueTooth.isDeviceConnected())
 					{
 						bound_device_llt.setVisibility(View.VISIBLE);
-						device_name_tv.setText(shareManager.getDeviceName());
+						//if(shareManager.getDeviceName().equals(""))
+						//	device_name_tv.setText(getResources().getString(R.string.prename)+"PE841M");
+						//else
+							device_name_tv.setText(shareManager.getDeviceName());
 					}
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block

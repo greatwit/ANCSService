@@ -29,6 +29,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Message;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -67,7 +68,7 @@ public class DeviceManager
 	private boolean mStartConnectMonitor = false;
 	private Handler mhandler = new Handler();
 	private int 	mIntervalTime = 20*1000;
-
+	Handler mHandler;
 
 	//private boolean isHangUp = false;
 	private boolean needSendAfterConnect = false;
@@ -92,6 +93,11 @@ public class DeviceManager
 		return mDeviceManager;
 	}
 
+	public void setHandler(Handler hand)
+	{
+		mHandler = hand;
+	}
+	
 	private void initReceiver()
 	{
 		IntentFilter filter = new IntentFilter();
@@ -158,7 +164,7 @@ public class DeviceManager
 						case BluetoothAdapter.STATE_ON: //last on
 							if(!shareManager.getDeviceAddress().equals(""))
 							{
-								connectLastDevice();
+								//connectLastDevice();
 							}
 							break;
 							
@@ -297,9 +303,6 @@ public class DeviceManager
 		return result;
 	}
 	
-
-
-	
 	public boolean connect(String address) 
 	{
 		if(isBluetoothOpen()==false)
@@ -407,7 +410,6 @@ public class DeviceManager
 		
 		if (!shareManager.getDeviceAddress().equals("") && mBluetoothGatt != null) 
 		{
-
 			if (mDevice == null) 
 			{
 				mDevice = mBluetoothAdapter.getRemoteDevice(shareManager.getDeviceAddress());
@@ -426,7 +428,6 @@ public class DeviceManager
 
 		return isConnected;
 	}
-	
 	
 	public void setDiscoverableTimeout(int timeout) 
 	{
@@ -472,7 +473,7 @@ public class DeviceManager
             if(isBluetoothOpen())
             {
 
-        		if (!shareManager.getDeviceAddress().equals("")) 
+        		//if (!shareManager.getDeviceAddress().equals("")) 
         		{
         			if (!isDeviceConnected()) 
         			{
@@ -510,8 +511,10 @@ public class DeviceManager
         			}
         		}
             }
-            setDiscoverableTimeout(300);
-            
+            //setDiscoverableTimeout(300);
+            Message message = new Message();      
+            message.what = 0;      
+            mHandler.sendMessage(message);
             //receivedTelegram();
             mhandler.postDelayed(mConnectMonitor, mIntervalTime);
         }
@@ -573,7 +576,7 @@ public class DeviceManager
 				{
 					RLog.e(TAG, "mBluetoothGatt==null");
 				}
-				//stopConnectMonitor();
+				stopConnectMonitor();
 				//closeDiscoverableTimeout();
 			}
 			else if (newState == BluetoothProfile.STATE_DISCONNECTED) 
@@ -593,8 +596,8 @@ public class DeviceManager
 				//discoverableIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				//mContext.startActivity(discoverableIntent);
 				
-				//if(mStartConnectMonitor&&isBluetoothOpen())
-				//	startConnectMonitor();
+				if(mStartConnectMonitor&&isBluetoothOpen())
+					startConnectMonitor();
 			}
 		}
 
@@ -605,13 +608,14 @@ public class DeviceManager
 			if (status == BluetoothGatt.GATT_SUCCESS) 
 			{
 				displayGattServices(getSupportedGattServices());
-				sendConnectedBroad();
+				//sendConnectedBroad();
+				//receivedTelegram();
 				RLog.w(TAG, "onServicesDiscovered received GATT_SUCCESS status=: " + status);
 			} else 
 			{
 				RLog.w(TAG, "onServicesDiscovered received: " + status);
 			}
-			receivedTelegram();
+			
 		} 
 
 		@Override
@@ -877,7 +881,7 @@ public class DeviceManager
 			}
 		}
 	};
-	
+	/*
 	private LeScanCallback callback2 = new LeScanCallback() 
 	{
 		@Override
@@ -892,7 +896,7 @@ public class DeviceManager
 			}
 		}
 	};
-	/*
+	
 	private class BluetoothStateReceiver extends BroadcastReceiver
 	{
 		@Override
